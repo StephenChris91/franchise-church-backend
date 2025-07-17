@@ -7,12 +7,7 @@ const sermonsRouter = require("./routes/sermons");
 const app = express();
 
 // CORS (Production-safe)
-const allowedOrigins = [
-  "https://franchise-red.vercel.app",
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "*",
-];
+const allowedOrigins = ["*"];
 app.use(
   cors({
     origin: (origin, cb) => {
