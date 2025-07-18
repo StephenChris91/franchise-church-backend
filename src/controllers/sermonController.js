@@ -81,7 +81,7 @@ exports.uploadSermon = async (req, res) => {
 
 exports.getSermons = async (req, res) => {
   try {
-    const sermons = await prisma.sermon.findMany({
+    const sermons = await prisma.sermons.findMany({
       orderBy: { createdAt: "desc" },
     });
 
