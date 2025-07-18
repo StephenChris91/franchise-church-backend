@@ -83,8 +83,36 @@ exports.getSermons = async (req, res) => {
   try {
     const sermons = await prisma.sermons.findMany();
 
-    console.log("✅ Sermons fetched:", sermons.length);
-    res.status(200).json({ sermons });
+    const signedSermons = await Promise.all(
+      sermons.map(async (sermon) => {
+        // 🎧 Signed Audio URL
+        const { data: signedAudio, error: audioErr } =
+          await supabaseAdmin.storage
+            .from("sermons-audio")
+            .createSignedUrl(sermon.audio_url, 60 * 60); // 1 hour
+
+        // 🖼️ Signed Thumbnail URL
+        let signedThumbnail = "/assets/sermon-fallback.jpg"; // default
+        if (sermon.thumbnail) {
+          const { data: thumbData, error: thumbErr } =
+            await supabaseAdmin.storage
+              .from("sermons-thumbnails")
+              .createSignedUrl(sermon.thumbnail, 60 * 60);
+          if (!thumbErr && thumbData?.signedUrl) {
+            signedThumbnail = thumbData.signedUrl;
+          }
+        }
+
+        return {
+          ...sermon,
+          audioUrl: signedAudio?.signedUrl || null,
+          thumbnail: signedThumbnail,
+        };
+      })
+    );
+
+    console.log("✅ Signed sermons fetched:", signedSermons.length);
+    res.status(200).json({ sermons: signedSermons });
   } catch (error) {
     console.error("🔥 getSermons error:", error);
     res.status(500).json({ message: "Server Error", error: error.message });
