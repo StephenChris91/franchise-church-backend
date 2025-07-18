@@ -1,4 +1,4 @@
-const fs = require("fs/promises");
+const fs = require("fs").promises;
 const os = require("os");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
@@ -79,7 +79,7 @@ exports.uploadSermon = async (req, res) => {
   }
 };
 
-export const getSermons = async (req, res) => {
+exports.getSermons = async (req, res) => {
   try {
     const sermons = await prisma.sermon.findMany({
       orderBy: { createdAt: "desc" },
