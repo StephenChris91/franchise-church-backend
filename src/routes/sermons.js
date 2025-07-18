@@ -1,10 +1,25 @@
 // src/routes/sermons.js
+
 const express = require("express");
-const router = express.Router();
+const multer = require("multer");
 const { uploadSermon, getSermons } = require("../controllers/sermonController");
 
-// Make sure this is a function, not undefined
+const router = express.Router();
+
+// Use in-memory storage for multer
+const upload = multer({ storage: multer.memoryStorage() });
+
+// Handle sermon uploads with file support
+router.post(
+  "/",
+  upload.fields([
+    { name: "audio", maxCount: 1 },
+    { name: "thumbnailFile", maxCount: 1 },
+  ]),
+  uploadSermon
+);
+
+// Handle fetching sermons (with signed URLs)
 router.get("/", getSermons);
-router.post("/", uploadSermon);
 
 module.exports = router;

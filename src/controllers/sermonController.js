@@ -50,7 +50,7 @@ exports.uploadSermon = async (req, res) => {
     if (thumbnailFile) {
       thumbnailName = `${uuidv4()}-${thumbnailFile.originalname}`;
       const { error: thumbErr } = await supabaseAdmin.storage
-        .from("sermons-thumbnails")
+        .from("sermons-thumbnail")
         .upload(thumbnailName, thumbnailFile.buffer, {
           contentType: thumbnailFile.mimetype,
           upsert: true,
