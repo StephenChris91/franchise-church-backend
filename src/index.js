@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const sermonsRoutes = require("./src/routes/sermons");
+const sermonsRoutes = require("./routes/sermons");
 
 app.use(
   cors({

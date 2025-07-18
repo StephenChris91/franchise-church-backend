@@ -1,5 +1,5 @@
 // server.js
-const app = require("./index");
+const app = require("./src/index");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
