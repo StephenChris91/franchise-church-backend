@@ -79,14 +79,16 @@ exports.uploadSermon = async (req, res) => {
   }
 };
 
-exports.getSermons = async (req, res) => {
+export const getSermons = async (req, res) => {
   try {
-    const sermons = await prisma.sermons.findMany({
-      orderBy: { date: "desc" },
+    const sermons = await prisma.sermon.findMany({
+      orderBy: { createdAt: "desc" },
     });
-    res.status(200).json(sermons);
-  } catch (err) {
-    console.error("❌ Failed to fetch sermons:", err);
-    res.status(500).json({ error: "Failed to fetch sermons" });
+
+    console.log("✅ Sermons fetched:", sermons.length);
+    res.status(200).json({ sermons });
+  } catch (error) {
+    console.error("🔥 getSermons error:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };

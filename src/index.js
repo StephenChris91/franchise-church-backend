@@ -12,7 +12,10 @@ app.use(
 );
 
 app.use(express.json());
-app.use("/api/sermons", sermonsRoutes); // Important: this must match exactly what frontend calls
+app.use("/api/sermons", sermonsRoutes);
+app.get("/", (req, res) => {
+  res.send("Franchise Church Backend is running 🚀");
+}); // Important: this must match exactly what frontend calls
 
 app.get("/", (req, res) => res.send("Franchise Church API running"));
 
