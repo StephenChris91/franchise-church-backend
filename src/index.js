@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const sermonsRoutes = require("./routes/sermons");
+const contactRoutes = require("./routes/contact");
 
 app.use(
   cors({
@@ -13,6 +14,8 @@ app.use(
 
 app.use(express.json());
 app.use("/api/sermons", sermonsRoutes);
+app.use("/api/contact", contactRoutes);
+
 app.get("/", (req, res) => {
   res.send("Franchise Church Backend is running 🚀");
 }); // Important: this must match exactly what frontend calls
