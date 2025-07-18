@@ -4,7 +4,7 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const prisma = require("../prisma/client");
 const { supabaseAdmin } = require("../utils/supabaseAdmin");
-const compressAudio = require("../utils/compressAudio");
+const { compressAudio } = require("../utils/compressAudio");
 
 exports.uploadSermon = async (req, res) => {
   try {
