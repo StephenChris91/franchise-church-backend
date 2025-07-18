@@ -1,13 +1,9 @@
 const express = require("express");
-const { uploadSermon } = require("../controllers/sermonController");
+const { uploadSermon, getSermons } = require("../controllers/sermonController");
 
 const router = express.Router();
 
+router.get("/", getSermons);
 router.post("/", uploadSermon);
-
-// Optional test route
-router.get("/", (req, res) => {
-  res.status(200).json({ message: "GET /api/sermons works!" });
-});
 
 module.exports = router;

@@ -58,7 +58,7 @@ exports.uploadSermon = async (req, res) => {
       if (thumbErr) throw thumbErr;
     }
 
-    // ✅ Insert into database
+    // Insert into database
     console.log("🗃 Inserting record into database...");
     const sermon = await prisma.sermons.create({
       data: {
@@ -76,5 +76,17 @@ exports.uploadSermon = async (req, res) => {
   } catch (err) {
     console.error("❌ Upload failed:", err.message);
     res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getSermons = async (req, res) => {
+  try {
+    const sermons = await prisma.sermons.findMany({
+      orderBy: { date: "desc" },
+    });
+    res.status(200).json(sermons);
+  } catch (err) {
+    console.error("❌ Failed to fetch sermons:", err);
+    res.status(500).json({ error: "Failed to fetch sermons" });
   }
 };

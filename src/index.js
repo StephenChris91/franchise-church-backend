@@ -7,12 +7,21 @@ const sermonsRouter = require("./routes/sermons");
 const app = express();
 
 // CORS (Production-safe)
-const allowedOrigins = ["*"];
+const allowedOrigins = [
+  "https://franchise-red.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://franchise-church-backend.vercel.app",
+];
+
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) cb(null, true);
-      else cb(new Error("CORS not allowed"));
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
     },
     credentials: true,
   })
@@ -23,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-app.use("/api/sermons", sermonsRouter);
+app.use("/api/sermons", require("./routes/sermons"));
 
 app.get("/api/health", (_, res) => res.json({ status: "OK" }));
 
