@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 const os = require("os");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
-const { prisma } = require("../prisma/client");
+const prisma = require("../prisma/client");
 const { supabaseAdmin } = require("../utils/supabaseAdmin");
 const compressAudio = require("../utils/compressAudio");
 
