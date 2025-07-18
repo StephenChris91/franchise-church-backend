@@ -81,26 +81,27 @@ exports.uploadSermon = async (req, res) => {
 
 exports.getSermons = async (req, res) => {
   try {
-    const sermons = await prisma.sermons.findMany();
+    const limit = parseInt(req.query.limit) || 8;
+    const offset = parseInt(req.query.offset) || 0;
+
+    const sermons = await prisma.sermons.findMany({
+      skip: offset,
+      take: limit,
+      orderBy: { date: "desc" },
+    });
 
     const signedSermons = await Promise.all(
       sermons.map(async (sermon) => {
-        // 🎧 Signed Audio URL
-        const { data: signedAudio, error: audioErr } =
-          await supabaseAdmin.storage
-            .from("sermons-audio")
-            .createSignedUrl(sermon.audio_url, 60 * 60); // 1 hour
+        const { data: signedAudio } = await supabaseAdmin.storage
+          .from("sermons-audio")
+          .createSignedUrl(sermon.audio_url, 60 * 60);
 
-        // 🖼️ Signed Thumbnail URL
-        let signedThumbnail = "/assets/sermon-fallback.jpg"; // default
+        let signedThumbnail = "/assets/sermon-fallback.jpg";
         if (sermon.thumbnail) {
-          const { data: thumbData, error: thumbErr } =
-            await supabaseAdmin.storage
-              .from("sermons-thumbnail")
-              .createSignedUrl(sermon.thumbnail, 60 * 60);
-          if (!thumbErr && thumbData?.signedUrl) {
-            signedThumbnail = thumbData.signedUrl;
-          }
+          const { data: thumbData } = await supabaseAdmin.storage
+            .from("sermons-thumbnail")
+            .createSignedUrl(sermon.thumbnail, 60 * 60);
+          if (thumbData?.signedUrl) signedThumbnail = thumbData.signedUrl;
         }
 
         return {
@@ -111,7 +112,6 @@ exports.getSermons = async (req, res) => {
       })
     );
 
-    console.log("✅ Signed sermons fetched:", signedSermons.length);
     res.status(200).json({ sermons: signedSermons });
   } catch (error) {
     console.error("🔥 getSermons error:", error);
