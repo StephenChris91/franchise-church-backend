@@ -96,7 +96,7 @@ exports.getSermons = async (req, res) => {
         if (sermon.thumbnail) {
           const { data: thumbData, error: thumbErr } =
             await supabaseAdmin.storage
-              .from("sermons-thumbnails")
+              .from("sermons-thumbnail")
               .createSignedUrl(sermon.thumbnail, 60 * 60);
           if (!thumbErr && thumbData?.signedUrl) {
             signedThumbnail = thumbData.signedUrl;
